@@ -41,19 +41,12 @@ async function main () {
     const target = parameters.shift()
     const response = await this.MajorMUD.request(`/${target} @${clean} ${parameters.join(' ')}`)
 
-    const embed = new Discord.RichEmbed()
-    embed.setTitle(`/${target} @${clean}`)
-    embed.setDescription('MajorMUD In-Game Query')
-
-    for (let r of response.responses) {
-      r = r.split('')
-      r.shift()
-      r.pop()
-      embed.addField('Query Response', r.join(''))
-    }
+    var prettyResponse = response.responses.join('')
+    prettyResponse = prettyResponse.substring(1, prettyResponse.length-1)
+    prettyResponse = '```swift\n' + prettyResponse + '```'
 
     console.info(`Command Executed: /${target} @${clean} ${parameters.join(' ')}`)
-    return message.channel.send(embed).catch((error) => {
+    return message.channel.send(prettyResponse).catch((error) => {
       console.error('Failed Embed:', error.message)
     })
   })

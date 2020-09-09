@@ -43,7 +43,7 @@ async function main () {
 
     var prettyResponse = response.responses.join('')
     prettyResponse = prettyResponse.substring(1, prettyResponse.length-1)
-    prettyResponse = prettyResponse.replaceAll('  ', '\n')
+    prettyResponse = prettyResponse.replace(/  /g, '\n')
     prettyResponse = '```swift\n' + prettyResponse + '```'
 
     console.info(`Command Executed: /${target} @${clean} ${parameters.join(' ')}`)

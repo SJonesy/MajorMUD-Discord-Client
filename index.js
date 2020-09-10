@@ -39,15 +39,27 @@ async function main () {
 
     if (!command.startsWith(this.configuration.prefix)) return
     const target = parameters.shift()
-    const response = await this.MajorMUD.request(`/${target} @${clean} ${parameters.join(' ')}`)
 
-    var prettyResponse = response.responses.join('')
-    prettyResponse = prettyResponse.substring(1, prettyResponse.length-1)
-    prettyResponse = prettyResponse.replace(/  /g, '\n')
-    prettyResponse = '```swift\n' + prettyResponse + ' ```'
+    var commandToSend = ''
+    // Process commands
+    if (clean === 'topten') {
+      commandToSend = 'topten'
+    }
+    else { // Process telepath commands
+      commandToSend = `/${target} @${clean} ${parameters.join(' ')}`
+    }
+
+    // Prettify response
+    var response = await this.MajorMUD.request(commandToSend)
+    response = response.responses.join('')
+    response = response.substring(1, response.length-1)
+    response = '```swift\n' + response + ' ```'
+
+    // Custom per-request formatting
+    if (clean === 'exp') response = response.replace(/  /g, '\n')
 
     console.info(`Command Executed: /${target} @${clean} ${parameters.join(' ')}`)
-    return message.channel.send(prettyResponse).catch((error) => {
+    return message.channel.send(response).catch((error) => {
       console.error('Failed Embed:', error.message)
     })
   })
